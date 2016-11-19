@@ -24,6 +24,7 @@ type Remote struct {
 	// cache fields, there during the connection is open
 	upSrv  common.GitUploadPackService
 	upInfo *common.GitUploadPackInfo
+	auth   common.AuthMethod
 }
 
 func newRemote(s Storer, c *config.RemoteConfig) *Remote {
@@ -44,6 +45,10 @@ func (r *Remote) Connect() error {
 	return r.retrieveUpInfo()
 }
 
+func (r *Remote) setAuth(auth common.AuthMethod) {
+	r.auth = auth
+}
+
 func (r *Remote) connectUploadPackService() error {
 	endpoint, err := common.NewEndpoint(r.c.URL)
 	if err != nil {
@@ -53,6 +58,10 @@ func (r *Remote) connectUploadPackService() error {
 	r.upSrv, err = clients.NewGitUploadPackService(endpoint)
 	if err != nil {
 		return err
+	}
+
+	if r.auth != nil {
+		r.upSrv.SetAuth(r.auth)
 	}
 
 	return r.upSrv.Connect()

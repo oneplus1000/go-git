@@ -146,6 +146,8 @@ func (r *Repository) Clone(o *CloneOptions) error {
 		return err
 	}
 
+	remote.setAuth(o.Auth)
+
 	if err = remote.Connect(); err != nil {
 		return err
 	}

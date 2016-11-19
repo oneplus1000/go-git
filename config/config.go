@@ -56,6 +56,7 @@ type RemoteConfig struct {
 	Name  string
 	URL   string
 	Fetch []RefSpec
+	//Auth  common.AuthMethod
 }
 
 // Validate validate the fields and set the default values
